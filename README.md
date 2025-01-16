@@ -21,7 +21,7 @@ Make sure you have [uv](https://docs.astral.sh/uv/) installed.
    ORIGIN_BASE_URL='https://certification.canonical.com' \
    HOST='0.0.0.0' \
    PORT=8000 \
-   uv run uvicorn proxy.service:app --reload --host $HOST --port $PORT
+   uv run uvicorn proxy.service:app --reload
    ```
 
 The server will be running at `http://localhost:8000` by default.
