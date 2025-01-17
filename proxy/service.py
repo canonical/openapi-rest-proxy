@@ -1,21 +1,14 @@
+from fastapi import FastAPI, Request, Response
 import httpx
 import yaml
 import logging
-import argparse
 import os
-
-from fastapi import FastAPI, Request, Response
-from fastapi.routing import APIRoute
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
-
-from .proxy import create_proxy_routes, filter_endpoints
 
 app = FastAPI()
 
 logger = logging.getLogger()
 logger.name = "openapi-rest-proxy"
-
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 def load_openapi_schema(url: str):
@@ -43,6 +36,8 @@ openapi_schema = load_openapi_schema(openapi_schema_url)
 # Example: ALLOW_LIST="GET:/pets|GET:/pets/{petId}"
 allow_list = os.getenv("ENDPOINT_ALLOW_LIST", "").split("|")
 
+from .proxy import create_proxy_routes, filter_endpoints
+
 if allow_list:
     logging.info(f"Filtering API to allow list: {allow_list}")
     openapi_schema = filter_endpoints(openapi_schema, allow_list)
@@ -61,8 +56,14 @@ else:
 
 @app.middleware("http")
 async def add_fixed_headers(request: Request, call_next):
+    mutable_headers = list(request.scope["headers"])
+
     for header, value in fixed_headers.items():
-        request.headers[header] = value
+        logging.debug(f"Adding fixed header with key '{header}'")
+        mutable_headers.append((header.lower().encode("utf-8"), value.encode("utf-8")))
+
+    request.scope["headers"] = mutable_headers
+
     response = await call_next(request)
     return response
 

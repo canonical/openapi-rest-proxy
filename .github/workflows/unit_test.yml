@@ -15,5 +15,8 @@ jobs:
       with:
         version: "0.5.x"
     
+    - name: Resolve dev dependencies
+      run: uv sync --dev
+
     - name: Run unit tests
       run: uv run pytest tests/unit

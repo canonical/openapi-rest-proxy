@@ -21,5 +21,8 @@ jobs:
       - name: Start fixture server
         run: docker compose up schema -d
     
+      - name: Resolve dev dependencies
+        run: uv sync --dev
+
       - name: Run integration tests
         run: uv run pytest tests/integration        
