@@ -19,7 +19,7 @@ jobs:
           version: "0.5.x"
 
       - name: Start the fixture server
-        run: docker-compose up schema -d
+        run: docker compose up schema -d
     
       - name: Run unit tests
         run: uv run pytest tests/integration        
