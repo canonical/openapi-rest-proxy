@@ -39,7 +39,7 @@ The following environment variables can be set to configure the server:
 ## Running tests
 
 ```sh
-pytest
+uv run pytest
 ```
 
 ## License
