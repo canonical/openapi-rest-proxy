@@ -1,6 +1,6 @@
-# OpenAPI REST Proxy ![Unit Tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/unit_test.yml/badge.svg)
+# OpenAPI REST Proxy ![Unit tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/unit_test.yml/badge.svg) ![Integration tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/integration_test.yml/badge.svg)
 
-This project is an OpenAPI REST Proxy that allows you to easily create a RESTful API based on an OpenAPI specification.
+This project is an OpenAPI REST Proxy that allows you to easily create a RESTful API based on an OpenAPI specification, filtering through a selection of allowed endpoints.
 
 ## Running instructions
 
@@ -30,7 +30,7 @@ The server will be running at `http://localhost:8000` by default.
 
 The following environment variables can be set to configure the server:
 
-- `ENDPOINT_ALLOW_LIST`: A comma-separated list of allowed endpoints (e.g., `GET:/api/v2/certified-configurations`).
+- `ENDPOINT_ALLOW_LIST`: A comma-separated list of allowed endpoints in the format `METHOD:PATH` (e.g., `GET:/api/v2/certified-configurations`).
 - `OPENAPI_SCHEMA_URL`: The URL of the OpenAPI schema to use (e.g., `https://certification.canonical.com/api/v2/openapi`).
 - `ORIGIN_BASE_URL`: The base URL of the origin server (e.g., `https://certification.canonical.com`).
 - `PORT`: The port on which the server will run (default is `8000`).
