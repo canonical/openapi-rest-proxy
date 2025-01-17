@@ -1,0 +1,72 @@
+name: openapi-rest-proxy
+type: charm
+title: OpenAPI REST Proxy
+summary:
+  OpenAPI REST Proxy helps you wrap another OpenAPI conformant RESTful API with transparent auth.
+
+description: |
+  OpenAPI REST Proxy allows you to easily create a RESTful API based on an OpenAPI specification,
+  filtering through a selection of allowed endpoints.
+  
+  It optionally transparently handles auth with OAuth client credentials flow, and can be configured to pass arbitrary fixed request headers to the proxied service it makes calls to.
+
+base: ubuntu@24.04
+platforms:
+  amd64:
+
+config:
+  options:
+    log-level:
+      description: |
+        Configures the log level of gunicorn.
+
+        Acceptable values are: "info", "debug", "warning", "error" and "critical"
+      default: "info"
+      type: string
+    endpoint-allow-list:
+      description: |
+        A `|`-separated list of allowed endpoints in the format `METHOD:PATH` 
+        (e.g., `GET:/api/v2/certified-configurations`). `|` is used as a delimiter 
+        since it is not itself a valid character in a path.
+      type: string
+    openapi-schema-url:
+      description: |
+        The URL of the OpenAPI schema to use (e.g., `https://certification.canonical.com/api/v2/openapi`).
+      type: string
+    origin-base-url:
+      description: |
+        The base URL of the origin server (e.g., `https://certification.canonical.com`).
+      type: string
+    fixed-request-headers:
+      description: |
+        A `|`-separated list of fixed request headers in the format `HEADER:VALUE` 
+        (e.g., `Authorization:Bearer token|X-Custom-Header:Value`) which are included 
+        in all requests to the origin.
+      type: string
+    auth-endpoint-url:
+      description: |
+        The URL of the OAuth2 token endpoint (e.g., `https://auth.example.com/o/token/`).
+      type: string
+    client-id:
+      description: |
+        The client ID for OAuth2 authentication.
+      type: string
+    client-secret:
+      description: |
+        The client secret for OAuth2 authentication.
+      type: string
+    auth-scope:
+      description: |
+        The scope for OAuth2 authentication (optional).
+      type: string
+
+containers:
+  proxy:
+    resource: proxy-image
+
+
+resources:
+  proxy-image:
+    type: oci-image
+    description: OCI image for OpenAPI REST Proxy
+    upstream-source: canonical/openapi-rest-proxy
