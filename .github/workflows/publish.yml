@@ -33,7 +33,7 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/openapi-rest-proxy:latest
 
   build-and-push-charm:
-    runs-on: [self-hosted, linux, xlarge, jammy, x64]
+    runs-on: ubuntu-latest
     needs:
       - build-and-publish-image
     steps:
