@@ -38,6 +38,9 @@ The following environment variables can be set to configure the server:
 - `PORT`: The port on which the server will run (default is `8000`).
 - `HOST`: The host on which the server will run (default is `0.0.0.0`).
 - `FIXED_REQUEST_HEADERS`: A `|`-separated list of fixed request headers in the format `HEADER:VALUE` (e.g., `Authorization:Bearer token|X-Custom-Header:Value`) which are included in all requests to the origin.
+- `AUTH_ENDPOINT_URL`: The URL of the OAuth2 token endpoint (e.g., `https://auth.example.com/o/token/`).
+- `CLIENT_ID`: The client ID for OAuth2 authentication.
+- `CLIENT_SECRET`: The client secret for OAuth2 authentication.
 
 ## Running unit tests
 
