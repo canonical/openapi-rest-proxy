@@ -1,4 +1,4 @@
-# OpenAPI REST Proxy
+# OpenAPI REST Proxy ![Unit Tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/unit_test.yml/badge.svg)
 
 This project is an OpenAPI REST Proxy that allows you to easily create a RESTful API based on an OpenAPI specification.
 
