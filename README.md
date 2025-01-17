@@ -36,10 +36,24 @@ The following environment variables can be set to configure the server:
 - `PORT`: The port on which the server will run (default is `8000`).
 - `HOST`: The host on which the server will run (default is `0.0.0.0`).
 
-## Running tests
+## Running unit tests
 
 ```sh
-uv run pytest
+uv run pytest tests/unit
+```
+
+## Running integration tests
+
+To run the integration tests, you need to have a server up serving the test fixtures (example toy OpenAPI schema and a toy API response). Easiest accomplished for local development with the help of [docker-compose](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository). In the root of the project, issue the following:
+
+```sh
+docker-compose up schema -d
+```
+
+Once you have the test fixture server running, run integration tests from the root of the project:
+
+```sh
+uv run pytest tests/integration
 ```
 
 ## License
