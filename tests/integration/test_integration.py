@@ -1,10 +1,20 @@
-import httpx
+import os
 import pytest
+from fastapi.testclient import TestClient
+
+os.environ["OPENAPI_SCHEMA_URL"] = "http://localhost:8001/example-openapi.yml"
+os.environ["ORIGIN_BASE_URL"] = "http://localhost:8001"
+os.environ["ENDPOINT_ALLOW_LIST"] = "GET:/pets"
+
+from proxy.service import app
+
+# Note! You need to have the schema server running at https://localhost:8001
+# Easiest achieved with `docker-compose up schema -d` at the root of the project.
 
 
 @pytest.fixture(scope="module")
 def client():
-    return httpx.Client(base_url="http://localhost:8000")
+    return TestClient(app)
 
 
 def test_read_root(client):
