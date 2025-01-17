@@ -20,12 +20,16 @@ def filter_endpoints(schema: dict, allow_list: list):
     for path, methods in schema.get("paths", {}).items():
         for method in methods.keys():
             method_path_combo = f"{method.upper()}:{path}"
+            formatted_method_path_combo = f"{method.upper()} {path}"
+
             logging.debug(f"Checking {method_path_combo}")
             if method_path_combo in allow_list:
-                logging.info(f"Allowing path: {method.upper()} {path}")
+                logging.info(f"Allowing {formatted_method_path_combo}")
                 if path not in filtered_paths:
                     filtered_paths[path] = {}
                 filtered_paths[path][method] = methods[method]
+            else:
+                logging.debug(f"Not allowing {formatted_method_path_combo}")
 
     if not filtered_paths or not filtered_paths.keys():
         raise ValueError("No endpoints matched the allow list.")
@@ -40,15 +44,15 @@ def create_proxy_routes(router: APIRouter, schema: dict, origin_base_url: str):
 
     for path, methods in schema.get("paths", {}).items():
         for method, _operation in methods.items():
-            route_path = path.lstrip("/")  # Drop leading slash
             method_name = method.upper()
 
-            logging.info(f"Registering route: {method_name} /{route_path}")
             router.add_api_route(
-                path=f"/{route_path}",
+                path=path,
                 endpoint=create_proxy_handler(method_name, path, origin_base_url),
                 methods=[method_name],
             )
+            logging.info(f"Registered route {method_name} {path}")
+
     logging.debug("Proxy routes created.")
 
 
