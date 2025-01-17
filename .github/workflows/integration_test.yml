@@ -1,0 +1,29 @@
+name: Integration Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:19.03.12
+        # options: --privileged
+        ports:
+          - 8000:8000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.5.x"
+
+      - name: Set up Docker Compose
+        run: docker-compose up schema -d
+    
+      - name: Run unit tests
+        run: uv run pytest tests/integration        

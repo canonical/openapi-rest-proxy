@@ -15,5 +15,5 @@ jobs:
       with:
         version: "0.5.x"
     
-    - name: Run tests
-      run: uv run pytest
+    - name: Run unit tests
+      run: uv run pytest tests/unit
