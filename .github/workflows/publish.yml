@@ -40,7 +40,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Upload charm to charmhub
-        uses: canonical/charming-actions/upload-charm@2.6.3
+        uses: canonical/charming-actions/upload-charm@3d1aae2686723b4f25d1be5cc78bfe147f7f100d
         with:
           charm-path: "charm"
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
