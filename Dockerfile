@@ -23,4 +23,4 @@ ENV UV_LINK_MODE=copy
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync
 
-CMD uv run uvicorn proxy.service:app --host $HOST --port $PORT
+CMD uv run uvicorn proxy.app:app --host $HOST --port $PORT
