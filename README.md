@@ -37,6 +37,7 @@ The following environment variables can be set to configure the server:
 - `ORIGIN_BASE_URL`: The base URL of the origin server (e.g., `https://certification.canonical.com`).
 - `PORT`: The port on which the server will run (default is `8000`).
 - `HOST`: The host on which the server will run (default is `0.0.0.0`).
+- `FIXED_REQUEST_HEADERS`: A `|`-separated list of fixed request headers in the format `HEADER:VALUE` (e.g., `Authorization:Bearer token|X-Custom-Header:Value`) which are included in all requests to the origin.
 
 ## Running unit tests
 
