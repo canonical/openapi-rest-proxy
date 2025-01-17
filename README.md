@@ -41,6 +41,7 @@ The following environment variables can be set to configure the server:
 - `AUTH_ENDPOINT_URL`: The URL of the OAuth2 token endpoint (e.g., `https://auth.example.com/o/token/`).
 - `CLIENT_ID`: The client ID for OAuth2 authentication.
 - `CLIENT_SECRET`: The client secret for OAuth2 authentication.
+- `AUTH_SCOPE`: The scope for OAuth2 authentication (optional).
 
 ## Running unit tests
 
