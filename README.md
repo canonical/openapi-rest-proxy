@@ -1,4 +1,4 @@
-# OpenAPI REST Proxy ![Unit tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/unit_test.yml/badge.svg) ![Integration tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/integration_test.yml/badge.svg)
+# OpenAPI REST Proxy ![Unit tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/unit_test.yml/badge.svg) ![Integration tests](https://github.com/canonical/openapi-rest-proxy/actions/workflows/integration_test.yml/badge.svg) ![Publish OCI Image and charm](https://github.com/canonical/openapi-rest-proxy/actions/workflows/publish.yml/badge.svg)
 
 This project is an OpenAPI REST Proxy that allows you to easily create a RESTful API based on an OpenAPI specification, filtering through a selection of allowed endpoints.
 
