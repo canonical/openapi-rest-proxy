@@ -13,7 +13,7 @@ services:
       - schema
 
   schema:
-    image: python:3.12-slim
+    image: python:3.13-slim
     command: python -m http.server 8001
     volumes:
       - ./tests/fixtures:/app/tests/fixtures
