@@ -6,7 +6,7 @@ on:
     types: [completed]
     branches:
       - main
-    
+
 jobs:
   build-and-publish-image:
     runs-on: ubuntu-latest
@@ -46,4 +46,3 @@ jobs:
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           upload-image: "true"
-          tag-prefix: "hwapi"
