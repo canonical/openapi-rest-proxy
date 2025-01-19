@@ -10,7 +10,9 @@ app = FastAPI()
 
 logger = logging.getLogger()
 logger.name = "openapi-rest-proxy"
-logging.basicConfig(level=logging.INFO)
+
+log_level = os.getenv("LOG_LEVEL", logging.INFO).upper()
+logging.basicConfig(level=log_level)
 
 
 def load_openapi_schema(url: str):

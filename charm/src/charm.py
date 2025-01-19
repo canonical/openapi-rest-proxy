@@ -28,10 +28,10 @@ class CharmCharm(ops.CharmBase):
 
     def __init__(self, framework: ops.Framework):
         super().__init__(framework)
-        framework.observe(self.on["httpbin"].pebble_ready, self._on_httpbin_pebble_ready)
+        framework.observe(self.on["proxy"].pebble_ready, self._on_proxy_pebble_ready)
         framework.observe(self.on.config_changed, self._on_config_changed)
 
-    def _on_httpbin_pebble_ready(self, event: ops.PebbleReadyEvent):
+    def _on_proxy_pebble_ready(self, event: ops.PebbleReadyEvent):
         """Define and start a workload using the Pebble API.
 
         Change this example to suit your needs. You'll need to specify the right entrypoint and
@@ -39,14 +39,10 @@ class CharmCharm(ops.CharmBase):
 
         Learn more about interacting with Pebble at at https://juju.is/docs/sdk/pebble.
         """
-        # Get a reference the container attribute on the PebbleReadyEvent
+
         container = event.workload
-        # Add initial Pebble config layer using the Pebble API
-        container.add_layer("httpbin", self._pebble_layer, combine=True)
-        # Make Pebble reevaluate its plan, ensuring any services are started if enabled.
+        container.add_layer("proxy", self._pebble_layer, combine=True)
         container.replan()
-        # Learn more about statuses in the SDK docs:
-        # https://juju.is/docs/sdk/constructs#heading--statuses
         self.unit.status = ops.ActiveStatus()
 
     def _on_config_changed(self, event: ops.ConfigChangedEvent):
@@ -60,41 +56,34 @@ class CharmCharm(ops.CharmBase):
         # Fetch the new config value
         log_level = cast(str, self.model.config["log-level"]).lower()
 
-        # Do some validation of the configuration option
         if log_level in VALID_LOG_LEVELS:
-            # The config is good, so update the configuration of the workload
-            container = self.unit.get_container("httpbin")
-            # Push an updated layer with the new config
+            container = self.unit.get_container("proxy")
             try:
-                container.add_layer("httpbin", self._pebble_layer, combine=True)
+                container.add_layer("proxy", self._pebble_layer, combine=True)
                 container.replan()
             except ops.pebble.ConnectionError:
-                # We were unable to connect to the Pebble API, so we defer this event
                 self.unit.status = ops.MaintenanceStatus("waiting for Pebble API")
                 event.defer()
                 return
 
-            logger.debug("Log level for gunicorn changed to '%s'", log_level)
+            logger.debug("Log level changed to '%s'", log_level)
             self.unit.status = ops.ActiveStatus()
         else:
-            # In this case, the config option is bad, so block the charm and notify the operator.
             self.unit.status = ops.BlockedStatus(f"invalid log level: '{log_level}'")
 
     @property
     def _pebble_layer(self) -> ops.pebble.LayerDict:
         """Return a dictionary representing a Pebble layer."""
         return {
-            "summary": "httpbin layer",
-            "description": "pebble config layer for httpbin",
+            "summary": "proxy layer",
+            "description": "pebble config layer for openapi-rest-proxy",
             "services": {
-                "httpbin": {
+                "proxy": {
                     "override": "replace",
-                    "summary": "httpbin",
-                    "command": "gunicorn -b 0.0.0.0:80 httpbin:app -k gevent",
+                    "summary": "proxy",
+                    "command": "uv run uvicorn proxy.app:app",
                     "startup": "enabled",
-                    "environment": {
-                        "GUNICORN_CMD_ARGS": f"--log-level {self.model.config['log-level']}"
-                    },
+                    "environment": {"LOG_LEVEL": self.model.config["log-level"]},
                 }
             },
         }

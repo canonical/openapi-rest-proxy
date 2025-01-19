@@ -17,7 +17,7 @@ config:
   options:
     log-level:
       description: |
-        Configures the log level of gunicorn.
+        Configures log level for the application.
 
         Acceptable values are: "info", "debug", "warning", "error" and "critical"
       default: "info"
