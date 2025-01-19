@@ -7,16 +7,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
-      with:
-        version: "0.5.x"
-    
-    - name: Resolve dev dependencies
-      run: uv sync --dev
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.5.x"
 
-    - name: Run unit tests
-      run: uv run pytest tests/unit
+      - name: Resolve dev dependencies
+        run: uv sync --dev
+
+      - name: Run unit tests
+        run: uv run pytest tests/unit
+
+  charm_unit_test:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install tox with apt
+        run: sudo apt-get install -y python3.12 tox
+
+      - name: Run unit tests
+        run: tox -e unit
+        working-directory: charm
