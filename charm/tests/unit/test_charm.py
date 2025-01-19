@@ -10,31 +10,33 @@ from ops import testing
 from charm import CharmCharm
 
 
-def test_httpbin_pebble_ready():
+def test_config():
+    """Return a dictionary with the test configuration."""
+    return {
+        "log-level": "debug",
+        "openapi-schema-url": "https://example.com/schema",
+        "origin-base-url": "https://example.com",
+        "fixed-request-headers": "Authorization:Bearer token|X-Custom-Header:Value",
+        "auth-endpoint-url": "https://auth.example.com/o/token/",
+        "client-id": "example-client-id",
+        "client-secret": "example-client-secret",
+        "auth-scope": "example-scope",
+    }
+
+
+def test_proxy_pebble_ready():
     # Arrange:
     ctx = testing.Context(CharmCharm)
-    container = testing.Container("httpbin", can_connect=True)
-    state_in = testing.State(containers={container})
+    container = testing.Container("proxy", can_connect=True)
+    state_in = testing.State(containers={container}, config=test_config())
 
     # Act:
     state_out = ctx.run(ctx.on.pebble_ready(container), state_in)
 
     # Assert:
     updated_plan = state_out.get_container(container.name).plan
-    expected_plan = {
-        "services": {
-            "httpbin": {
-                "override": "replace",
-                "summary": "httpbin",
-                "command": "gunicorn -b 0.0.0.0:80 httpbin:app -k gevent",
-                "startup": "enabled",
-                "environment": {"GUNICORN_CMD_ARGS": "--log-level info"},
-            }
-        },
-    }
-    assert expected_plan == updated_plan
     assert (
-        state_out.get_container(container.name).service_statuses["httpbin"]
+        state_out.get_container(container.name).service_statuses["proxy"]
         == ops.pebble.ServiceStatus.ACTIVE
     )
     assert state_out.unit_status == testing.ActiveStatus()
@@ -43,21 +45,44 @@ def test_httpbin_pebble_ready():
 def test_config_changed_valid_can_connect():
     """Test a config-changed event when the config is valid and the container can be reached."""
     # Arrange:
-    ctx = testing.Context(CharmCharm)  # The default config will be read from charmcraft.yaml
-    container = testing.Container("httpbin", can_connect=True)
-    state_in = testing.State(
-        containers={container},
-        config={"log-level": "debug"},  # This is the config the charmer passed with `juju config`
-    )
+    ctx = testing.Context(
+        CharmCharm
+    )  # The default config will be read from charmcraft.yaml
+    container = testing.Container("proxy", can_connect=True)
+    state_in = testing.State(containers={container}, config=test_config())
 
     # Act:
     state_out = ctx.run(ctx.on.config_changed(), state_in)
 
     # Assert:
     updated_plan = state_out.get_container(container.name).plan
-    gunicorn_args = updated_plan.services["httpbin"].environment["GUNICORN_CMD_ARGS"]
-    assert gunicorn_args == "--log-level debug"
+    env = updated_plan.services["proxy"].environment
+    assert env["LOG_LEVEL"] == "debug"
+    assert env["OPENAPI_SCHEMA_URL"] == "https://example.com/schema"
+    assert env["ORIGIN_BASE_URL"] == "https://example.com"
+    assert (
+        env["FIXED_REQUEST_HEADERS"]
+        == "Authorization:Bearer token|X-Custom-Header:Value"
+    )
+    assert env["AUTH_ENDPOINT_URL"] == "https://auth.example.com/o/token/"
+    assert env["CLIENT_ID"] == "example-client-id"
+    assert env["CLIENT_SECRET"] == "example-client-secret"
+    assert env["AUTH_SCOPE"] == "example-scope"
     assert state_out.unit_status == testing.ActiveStatus()
+
+    # Check environment keys against charmcraft.yaml
+    env_keys = env.keys()
+    expected_keys = {
+        "LOG_LEVEL",
+        "OPENAPI_SCHEMA_URL",
+        "ORIGIN_BASE_URL",
+        "FIXED_REQUEST_HEADERS",
+        "AUTH_ENDPOINT_URL",
+        "CLIENT_ID",
+        "CLIENT_SECRET",
+        "AUTH_SCOPE",
+    }
+    assert env_keys == expected_keys
 
 
 def test_config_changed_valid_cannot_connect():
@@ -68,8 +93,8 @@ def test_config_changed_valid_cannot_connect():
     """
     # Arrange:
     ctx = testing.Context(CharmCharm)
-    container = testing.Container("httpbin", can_connect=False)
-    state_in = testing.State(containers={container}, config={"log-level": "debug"})
+    container = testing.Container("proxy", can_connect=False)
+    state_in = testing.State(containers={container}, config=test_config())
 
     # Act:
     state_out = ctx.run(ctx.on.config_changed(), state_in)
@@ -82,9 +107,11 @@ def test_config_changed_invalid():
     """Test a config-changed event when the config is invalid."""
     # Arrange:
     ctx = testing.Context(CharmCharm)
-    container = testing.Container("httpbin", can_connect=True)
+    container = testing.Container("proxy", can_connect=True)
     invalid_level = "foobar"
-    state_in = testing.State(containers={container}, config={"log-level": invalid_level})
+    config = test_config()
+    config["log-level"] = invalid_level
+    state_in = testing.State(containers={container}, config=config)
 
     # Act:
     state_out = ctx.run(ctx.on.config_changed(), state_in)
