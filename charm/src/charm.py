@@ -83,7 +83,18 @@ class CharmCharm(ops.CharmBase):
                     "summary": "proxy",
                     "command": "uv run uvicorn proxy.app:app",
                     "startup": "enabled",
-                    "environment": {"LOG_LEVEL": self.model.config["log-level"]},
+                    "environment": {
+                        "LOG_LEVEL": self.model.config["log-level"],
+                        "OPENAPI_SCHEMA_URL": self.model.config["openapi-schema-url"],
+                        "ORIGIN_BASE_URL": self.model.config["origin-base-url"],
+                        "FIXED_REQUEST_HEADERS": self.model.config[
+                            "fixed-request-headers"
+                        ],
+                        "AUTH_ENDPOINT_URL": self.model.config["auth-endpoint-url"],
+                        "CLIENT_ID": self.model.config["client-id"],
+                        "CLIENT_SECRET": self.model.config["client-secret"],
+                        "AUTH_SCOPE": self.model.config["auth-scope"],
+                    },
                 }
             },
         }
