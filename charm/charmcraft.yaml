@@ -1,13 +1,12 @@
 name: openapi-rest-proxy
 type: charm
 title: OpenAPI REST Proxy
-summary:
-  OpenAPI REST Proxy helps you wrap another OpenAPI conformant RESTful API with transparent auth.
+summary: OpenAPI REST Proxy helps you wrap another OpenAPI conformant RESTful API with transparent auth.
 
 description: |
   OpenAPI REST Proxy allows you to easily create a RESTful API based on an OpenAPI specification,
   filtering through a selection of allowed endpoints.
-  
+
   It optionally transparently handles auth with OAuth client credentials flow, and can be configured to pass arbitrary fixed request headers to the proxied service it makes calls to.
 
 base: ubuntu@24.04
@@ -64,9 +63,8 @@ containers:
   proxy:
     resource: proxy-image
 
-
 resources:
   proxy-image:
     type: oci-image
     description: OCI image for OpenAPI REST Proxy
-    upstream-source: canonical/openapi-rest-proxy
+    upstream-source: ghcr.io/canonical/openapi-rest-proxy
