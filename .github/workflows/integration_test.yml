@@ -39,7 +39,7 @@ jobs:
         run: sudo apt-get install -y python3.12 tox
 
       - name: Set up microk8s
-        uses: canonical/certification-github-workflows/.github/actions/microk8s-setup
+        uses: canonical/certification-github-workflows/.github/actions/microk8s-setup@main
 
       - name: Run charm integration tests
         run: tox -e integration
