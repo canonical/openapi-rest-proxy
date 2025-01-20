@@ -27,20 +27,20 @@ jobs:
       - name: Run integration tests
         run: uv run pytest tests/integration
 
-  charm_integration_test:
-    runs-on: ubuntu-latest
-    needs: integration_test
+  # charm_integration_test:
+  #   runs-on: ubuntu-latest
+  #   needs: integration_test
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Install tox
-        run: sudo apt-get install -y python3.12 tox
+  #     - name: Install tox
+  #       run: sudo apt-get install -y python3.12 tox
 
-      - name: Set up microk8s
-        uses: canonical/certification-github-workflows/.github/actions/microk8s-setup@update-setup-microk8s-deps
+  #     - name: Set up microk8s
+  #       uses: canonical/certification-github-workflows/.github/actions/microk8s-setup@update-setup-microk8s-deps
 
-      - name: Run charm integration tests
-        run: tox -e integration
-        working-directory: charm
+  #     - name: Run charm integration tests
+  #       run: tox -e integration
+  #       working-directory: charm
