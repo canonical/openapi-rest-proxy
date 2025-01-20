@@ -11,7 +11,7 @@ app = FastAPI()
 logger = logging.getLogger()
 logger.name = "openapi-rest-proxy"
 
-log_level = os.getenv("LOG_LEVEL", logging.INFO).upper()
+log_level = os.getenv("LOG_LEVEL", logging.getLevelName(logging.INFO)).upper()
 logging.basicConfig(level=log_level)
 
 
@@ -20,7 +20,7 @@ def load_openapi_schema(url: str):
     response = httpx.get(url)
     response.raise_for_status()
     schema = yaml.safe_load(response.text)
-    logging.debug(f"Loaded OpenAPI schema.")
+    logging.debug(f"Loaded OpenAPI schema from {url}.")
     return schema
 
 
