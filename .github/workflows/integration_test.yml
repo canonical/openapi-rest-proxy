@@ -94,6 +94,8 @@ jobs:
     runs-on: ubuntu-24.04
     needs:
       - define-matrix
+      - lib-check
+      - pack-charm
     strategy:
       fail-fast: false
       matrix:
