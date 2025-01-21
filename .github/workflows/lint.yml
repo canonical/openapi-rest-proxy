@@ -20,6 +20,6 @@ jobs:
       - name: Install dependencies
         run: sudo snap install --classic astral-uv
       - name: Run linters
-        run:
+        run: |
           uv tool run ruff check
           uv tool run ruff format --check --diff
