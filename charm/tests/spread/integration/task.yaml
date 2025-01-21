@@ -1,4 +1,20 @@
 summary: Run the charm integration test
 
+prepare: |
+  pushd "$SPREAD_PATH"
+
+  if [[ ! -f "$PWD/openapi-rest-proxy_amd64.charm" ]]; then
+    charmcraft pack --verbose
+  fi
+
 execute: |
-  tox -e integration
+  oci_image="$(cat charmcraft.yaml | yq '.resources.proxy-image.upstream-source')"
+  juju deploy "$PWD/openapi-rest-proxy_amd64.charm" proxy --resource proxy-image="$oci_image"
+
+  juju wait-for application proxy
+
+restore: |
+  if [[ -z "${CI:-}" ]]; then
+    juju destroy-model --no-prompt --destroy-storage testing
+    juju add-model testing
+  fi
