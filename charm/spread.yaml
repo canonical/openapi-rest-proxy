@@ -94,12 +94,12 @@ prepare: |
   fi
 
   snap install --classic concierge
-  concierge prepare --trace -p microk8s --extra-snaps astral-uv --extra-debs make
+  concierge prepare --trace -p microk8s --extra-snaps astral-uv
 
   pushd "$SPREAD_PATH"
 
-  if [[ -f "$PWD/zinc-k8s_amd64.charm" ]]; then
-    chown $(id -u):$(id -g) $PWD/zinc-k8s_amd64.charm
+  if [[ -f "$PWD/openapi-rest-proxy_amd64.charm" ]]; then
+    chown $(id -u):$(id -g) $PWD/openapi-rest-proxy_amd64.charm
   fi
 
 restore: |
