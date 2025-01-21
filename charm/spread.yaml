@@ -100,16 +100,6 @@ backends:
           password: spread
           workers: 1
 
-      - ubuntu-22.04:
-          username: spread
-          password: spread
-          workers: 1
-
-      - ubuntu-20.04:
-          username: spread
-          password: spread
-          workers: 1
-
   github-ci:
     type: adhoc
 
@@ -126,7 +116,7 @@ backends:
       echo "Discarding ad-hoc $SPREAD_SYSTEM"
 
     systems:
-      - ubuntu-22.04-amd64:
+      - ubuntu-24.04-amd64:
           username: ubuntu
           password: ubuntu
           workers: 1
@@ -137,7 +127,6 @@ suites:
 
     systems:
       - ubuntu-24.04*
-      - ubuntu-22.04*
 
     environment:
       CHARMCRAFT_CHANNEL/charmcraft_current: latest/stable
