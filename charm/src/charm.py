@@ -39,7 +39,6 @@ class CharmCharm(ops.CharmBase):
 
         Learn more about interacting with Pebble at at https://juju.is/docs/sdk/pebble.
         """
-
         container = event.workload
         container.add_layer("proxy", self._pebble_layer, combine=True)
         container.replan()
@@ -87,9 +86,7 @@ class CharmCharm(ops.CharmBase):
                         "LOG_LEVEL": self.model.config["log-level"],
                         "OPENAPI_SCHEMA_URL": self.model.config["openapi-schema-url"],
                         "ORIGIN_BASE_URL": self.model.config["origin-base-url"],
-                        "FIXED_REQUEST_HEADERS": self.model.config[
-                            "fixed-request-headers"
-                        ],
+                        "FIXED_REQUEST_HEADERS": self.model.config["fixed-request-headers"],
                         "AUTH_ENDPOINT_URL": self.model.config["auth-endpoint-url"],
                         "CLIENT_ID": self.model.config["client-id"],
                         "CLIENT_SECRET": self.model.config["client-secret"],

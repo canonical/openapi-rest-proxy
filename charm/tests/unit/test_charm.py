@@ -34,7 +34,6 @@ def test_proxy_pebble_ready():
     state_out = ctx.run(ctx.on.pebble_ready(container), state_in)
 
     # Assert:
-    updated_plan = state_out.get_container(container.name).plan
     assert (
         state_out.get_container(container.name).service_statuses["proxy"]
         == ops.pebble.ServiceStatus.ACTIVE
@@ -45,9 +44,7 @@ def test_proxy_pebble_ready():
 def test_config_changed_valid_can_connect():
     """Test a config-changed event when the config is valid and the container can be reached."""
     # Arrange:
-    ctx = testing.Context(
-        CharmCharm
-    )  # The default config will be read from charmcraft.yaml
+    ctx = testing.Context(CharmCharm)  # The default config will be read from charmcraft.yaml
     container = testing.Container("proxy", can_connect=True)
     state_in = testing.State(containers={container}, config=test_config())
 
@@ -60,10 +57,7 @@ def test_config_changed_valid_can_connect():
     assert env["LOG_LEVEL"] == "debug"
     assert env["OPENAPI_SCHEMA_URL"] == "https://example.com/schema"
     assert env["ORIGIN_BASE_URL"] == "https://example.com"
-    assert (
-        env["FIXED_REQUEST_HEADERS"]
-        == "Authorization:Bearer token|X-Custom-Header:Value"
-    )
+    assert env["FIXED_REQUEST_HEADERS"] == "Authorization:Bearer token|X-Custom-Header:Value"
     assert env["AUTH_ENDPOINT_URL"] == "https://auth.example.com/o/token/"
     assert env["CLIENT_ID"] == "example-client-id"
     assert env["CLIENT_SECRET"] == "example-client-secret"
