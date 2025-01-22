@@ -14,6 +14,16 @@ execute: |
   # oci_image="$(cat ../../charmcraft.yaml | yq '.resources.proxy-image.upstream-source')"
   echo "Executing at"
   echo $PWD
+
+  echo "PWD"
+  echo $(ls -l $PWD)
+
+  echo "PWD/.."
+  echo $(ls -l ../)
+
+  echo "PWD/../.."
+  echo $(ls -l ../../)
+
   oci_image="ghcr.io/canonical/openapi-rest-proxy:latest"
   juju deploy "$PWD/openapi-rest-proxy_amd64.charm" proxy --resource proxy-image="${oci_image}"
 
