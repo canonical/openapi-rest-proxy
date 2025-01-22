@@ -1,15 +1,5 @@
 summary: Run the charm integration test
 
-prepare: |
-  pushd "$SPREAD_PATH"
-
-  if [[ ! -f "$PWD/openapi-rest-proxy_amd64.charm" ]]; then
-    echo "Packing charm"
-    charmcraft pack --verbose
-  else
-    echo "Skipping charmcraft pack, charm already exists" 
-  fi
-
 execute: |
   # oci_image="$(cat ../../charmcraft.yaml | yq '.resources.proxy-image.upstream-source')"
   echo "Executing at"

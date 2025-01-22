@@ -97,10 +97,10 @@ prepare: |
   concierge prepare --trace -p microk8s --extra-snaps astral-uv
 
   pushd "$SPREAD_PATH"
-  echo "Changing ownership"
   echo "$SPREAD_PATH"
   echo "$PWD"
   echo $(ls -l ${{ SPREAD_PATH }})
+  echo "Changing ownership"
   chown $(id -u):$(id -g) $PWD/openapi-rest-proxy_amd64.charm
 
 restore: |
