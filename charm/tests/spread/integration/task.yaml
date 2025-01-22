@@ -4,12 +4,17 @@ prepare: |
   pushd "$SPREAD_PATH"
 
   if [[ ! -f "$PWD/openapi-rest-proxy_amd64.charm" ]]; then
+    echo "Packing charm"
     charmcraft pack --verbose
+  else
+    echo "Skipping charmcraft pack, charm already exists" 
   fi
 
 execute: |
-  oci_image="$(cat ../../charmcraft.yaml | yq '.resources.proxy-image.upstream-source')"
-  # oci_image="ghcr.io/canonical/openapi-rest-proxy:latest"
+  # oci_image="$(cat ../../charmcraft.yaml | yq '.resources.proxy-image.upstream-source')"
+  echo "Executing at"
+  echo $PWD
+  oci_image="ghcr.io/canonical/openapi-rest-proxy:latest"
   juju deploy "$PWD/openapi-rest-proxy_amd64.charm" proxy --resource proxy-image="${oci_image}"
 
   juju wait-for application proxy
