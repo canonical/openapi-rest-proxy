@@ -5,7 +5,7 @@ workers: 1
 environment:
   CI: "$(HOST: echo $CI)"
   CONCIERGE_JUJU_CHANNEL/juju_3_5: 3.5/stable
-  CONCIERGE_JUJU_CHANNEL/juju_3_6: 3.6/stable
+  # CONCIERGE_JUJU_CHANNEL/juju_3_6: 3.6/stable
 
 backends:
   lxd:
@@ -18,7 +18,7 @@ backends:
       MEM="${MEM:-8}"
 
       cloud_config="$(mktemp)"
-      sed "s|SPREAD_PASSWORD|$SPREAD_PASSWORD|g" tests/spread/lib/cloud-config.yaml > "$cloud_config"
+      sed "s|SPREAD_PASSWORD|$SPREAD_PASSWORD|g" tests/spread/cloud-config.yaml > "$cloud_config"
 
       lxc launch --vm \
         "ubuntu:${BASE}" \
@@ -97,10 +97,6 @@ prepare: |
   concierge prepare --trace -p microk8s --extra-snaps astral-uv
 
   pushd "$SPREAD_PATH"
-  echo "$SPREAD_PATH"
-  echo "$PWD"
-  echo $(ls -l ${{ SPREAD_PATH }})
-  echo "Changing ownership"
   chown $(id -u):$(id -g) $PWD/openapi-rest-proxy_amd64.charm
 
 restore: |
