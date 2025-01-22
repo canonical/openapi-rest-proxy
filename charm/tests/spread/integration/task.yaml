@@ -5,10 +5,10 @@ execute: |
   juju deploy "$PWD/../../../openapi-rest-proxy_amd64.charm" proxy --resource proxy-image="${oci_image}"
 
   juju config proxy log-level=info
-  juju config proxy endpoint-allow-list='GET:/api/v2/certified-configurations'
-  juju config proxy openapi-schema-url='https://certification.canonical.com/api/v2/openapi'
-  juju config proxy origin-base-url='https://certification.canonical.com'
-  juju config proxy fixed-request-headers='Authorization:Bearer token|X-Custom-Header:Value'
+  juju config proxy endpoint-allow-list='GET:/api/v3/pets'
+  juju config proxy openapi-schema-url='https://api.example.com/api/v2/openapi'
+  juju config proxy origin-base-url='https://api.example.com'
+  juju config proxy fixed-request-headers='Authorization|X-Custom-Header'
   juju config proxy auth-endpoint-url='https://auth.example.com/o/token/'
   juju config proxy client-id='your-client-id'
   juju config proxy client-secret='your-client-secret'
