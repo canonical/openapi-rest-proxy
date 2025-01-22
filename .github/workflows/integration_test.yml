@@ -109,17 +109,6 @@ jobs:
         with:
           name: charm
           path: ${{ github.workspace }}/charm
-
-      - name: Check that the charm artifact made it
-        run: |
-          charm_path="${{ github.workspace }}/charm"
-          ls -l $charm_path
-          echo $(ls -l ${{ github.workspace }}/charm)
-          # fail if $charm_path/*.charm is not found
-          if [ ! -f $charm_path/*.charm ]; then
-            echo "No charm artifact found"
-            exit 1
-          fi
   
       - name: Setup LXD
         uses: canonical/setup-lxd@main

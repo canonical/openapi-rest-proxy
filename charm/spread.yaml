@@ -18,7 +18,7 @@ backends:
       MEM="${MEM:-8}"
 
       cloud_config="$(mktemp)"
-      sed "s|SPREAD_PASSWORD|$SPREAD_PASSWORD|g" tests/spread/cloud-config.yaml > "$cloud_config"
+      sed "s|SPREAD_PASSWORD|$SPREAD_PASSWORD|g" tests/spread/lib/cloud-config.yaml > "$cloud_config"
 
       lxc launch --vm \
         "ubuntu:${BASE}" \
