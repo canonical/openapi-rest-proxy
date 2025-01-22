@@ -98,9 +98,9 @@ prepare: |
 
   pushd "$SPREAD_PATH"
 
-  if [[ -f "$PWD/openapi-rest-proxy_amd64.charm" ]]; then
+  #if [[ -f "$PWD/openapi-rest-proxy_amd64.charm" ]]; then
     chown $(id -u):$(id -g) $PWD/openapi-rest-proxy_amd64.charm
-  fi
+  #fi
 
 restore: |
   if [[ -z "${CI:-}" ]]; then
