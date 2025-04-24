@@ -10,7 +10,7 @@ on:
     branches:
       - main
     tags:
-      - v*
+      - rev*
  
   pull_request:
     branches:

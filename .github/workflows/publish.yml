@@ -3,7 +3,7 @@ name: Publish OCI Image and charm
 on:
   push:
     tags:
-      - 'v*'
+      - 'rev*'
 
 jobs:
   build-and-publish-image:
