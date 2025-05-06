@@ -21,6 +21,7 @@ def test_config():
         "client-id": "example-client-id",
         "client-secret": "example-client-secret",
         "auth-scope": "example-scope",
+        "endpoint-allow-list": "GET:/api/v2/example/",
     }
 
 
@@ -62,6 +63,7 @@ def test_config_changed_valid_can_connect():
     assert env["CLIENT_ID"] == "example-client-id"
     assert env["CLIENT_SECRET"] == "example-client-secret"
     assert env["AUTH_SCOPE"] == "example-scope"
+    assert env["ENDPOINT_ALLOW_LIST"] == "GET:/api/v2/example/"
     assert state_out.unit_status == testing.ActiveStatus()
 
     # Check environment keys against charmcraft.yaml
@@ -75,6 +77,7 @@ def test_config_changed_valid_can_connect():
         "CLIENT_ID",
         "CLIENT_SECRET",
         "AUTH_SCOPE",
+        "ENDPOINT_ALLOW_LIST",
     }
     assert env_keys == expected_keys
 
