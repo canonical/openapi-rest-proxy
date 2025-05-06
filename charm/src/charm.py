@@ -91,6 +91,7 @@ class CharmCharm(ops.CharmBase):
                         "CLIENT_ID": self.model.config["client-id"],
                         "CLIENT_SECRET": self.model.config["client-secret"],
                         "AUTH_SCOPE": self.model.config["auth-scope"],
+                        "ENDPOINT_ALLOW_LIST": self.model.config["endpoint-allow-list"],
                     },
                 }
             },

@@ -94,7 +94,7 @@ allow_list = os.getenv("ENDPOINT_ALLOW_LIST", "").split("|")
 
 from .proxy import create_proxy_routes, filter_endpoints
 
-if allow_list:
+if allow_list != ['']:
     logging.info(f"Filtering API to allow list: {allow_list}")
     openapi_schema = filter_endpoints(openapi_schema, allow_list)
 else:
