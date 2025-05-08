@@ -58,6 +58,14 @@ config:
       description: |
         The scope for OAuth2 authentication (optional).
       type: string
+    hostname:
+      description: |
+        Public hostname for the service.
+      type: string
+
+requires:
+  nginx-route:
+    interface: nginx-route
 
 containers:
   proxy:
