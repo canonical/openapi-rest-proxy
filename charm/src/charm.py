@@ -16,6 +16,7 @@ import logging
 from typing import cast
 
 import ops
+from charms.nginx_ingress_integrator.v0.nginx_route import require_nginx_route
 
 # Log messages can be retrieved using juju debug-log
 logger = logging.getLogger(__name__)
@@ -28,6 +29,7 @@ class CharmCharm(ops.CharmBase):
 
     def __init__(self, framework: ops.Framework):
         super().__init__(framework)
+        self._require_nginx_route()
         framework.observe(self.on["proxy"].pebble_ready, self._on_proxy_pebble_ready)
         framework.observe(self.on.config_changed, self._on_config_changed)
 
@@ -43,6 +45,14 @@ class CharmCharm(ops.CharmBase):
         container.add_layer("proxy", self._pebble_layer, combine=True)
         container.replan()
         self.unit.status = ops.ActiveStatus()
+
+    def _require_nginx_route(self):
+        require_nginx_route(
+            charm=self,
+            service_hostname=self.model.config.get("hostname", self.app.name),
+            service_name=self.app.name,
+            service_port=8000,
+        )
 
     def _on_config_changed(self, event: ops.ConfigChangedEvent):
         """Handle changed configuration.
@@ -91,7 +101,7 @@ class CharmCharm(ops.CharmBase):
                         "CLIENT_ID": self.model.config["client-id"],
                         "CLIENT_SECRET": self.model.config["client-secret"],
                         "AUTH_SCOPE": self.model.config["auth-scope"],
-                        "ENDPOINT_ALLOW_LIST": self.model.config["endpoint-allow-list"],
+                        "ENDPOINT_ALLOW_LIST": self.model.config.get("endpoint-allow-list", ""),
                     },
                 }
             },
