@@ -70,6 +70,7 @@ juju config nginx-ingress-integrator service-hostname='my-charm.example.com'
 # 'http://my-charm.example.com'.
 ```
 """
+
 import logging
 import typing
 import weakref
