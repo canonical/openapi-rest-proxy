@@ -22,6 +22,8 @@ from charms.nginx_ingress_integrator.v0.nginx_route import require_nginx_route
 logger = logging.getLogger(__name__)
 
 VALID_LOG_LEVELS = ["info", "debug", "warning", "error", "critical"]
+HOST = "0.0.0.0"
+PORT = "8000"
 
 
 class CharmCharm(ops.CharmBase):
@@ -51,7 +53,7 @@ class CharmCharm(ops.CharmBase):
             charm=self,
             service_hostname=self.model.config.get("hostname", self.app.name),
             service_name=self.app.name,
-            service_port=8000,
+            service_port=PORT,
         )
 
     def _on_config_changed(self, event: ops.ConfigChangedEvent):
@@ -90,7 +92,7 @@ class CharmCharm(ops.CharmBase):
                 "proxy": {
                     "override": "replace",
                     "summary": "proxy",
-                    "command": "uv run uvicorn proxy.app:app",
+                    "command": f"uv run uvicorn proxy.app:app --host {HOST} --port {PORT}",
                     "startup": "enabled",
                     "environment": {
                         "LOG_LEVEL": self.model.config["log-level"],
