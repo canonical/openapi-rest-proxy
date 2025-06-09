@@ -43,6 +43,14 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           persist-credentials: false
+      - name: Debug - Check charm directory
+        run: |
+          echo "Repository structure:"
+          ls -la
+          echo "Charm directory contents:"
+          ls -la charm/
+          echo "Charmcraft.yaml content:"
+          cat charm/charmcraft.yaml
       - name: Promote Charm
         uses: canonical/charming-actions/promote-charm@main
         with:
