@@ -10,7 +10,7 @@ from ops import testing
 from charm import CharmCharm
 
 
-def test_config():
+def get_test_config():
     """Return a dictionary with the test configuration."""
     return {
         "log-level": "debug",
@@ -29,7 +29,7 @@ def test_proxy_pebble_ready():
     # Arrange:
     ctx = testing.Context(CharmCharm)
     container = testing.Container("proxy", can_connect=True)
-    state_in = testing.State(containers={container}, config=test_config())
+    state_in = testing.State(containers={container}, config=get_test_config())
 
     # Act:
     state_out = ctx.run(ctx.on.pebble_ready(container), state_in)
@@ -47,7 +47,7 @@ def test_config_changed_valid_can_connect():
     # Arrange:
     ctx = testing.Context(CharmCharm)  # The default config will be read from charmcraft.yaml
     container = testing.Container("proxy", can_connect=True)
-    state_in = testing.State(containers={container}, config=test_config())
+    state_in = testing.State(containers={container}, config=get_test_config())
 
     # Act:
     state_out = ctx.run(ctx.on.config_changed(), state_in)
@@ -91,7 +91,7 @@ def test_config_changed_valid_cannot_connect():
     # Arrange:
     ctx = testing.Context(CharmCharm)
     container = testing.Container("proxy", can_connect=False)
-    state_in = testing.State(containers={container}, config=test_config())
+    state_in = testing.State(containers={container}, config=get_test_config())
 
     # Act:
     state_out = ctx.run(ctx.on.config_changed(), state_in)
@@ -106,7 +106,7 @@ def test_config_changed_invalid():
     ctx = testing.Context(CharmCharm)
     container = testing.Container("proxy", can_connect=True)
     invalid_level = "foobar"
-    config = test_config()
+    config = get_test_config()
     config["log-level"] = invalid_level
     state_in = testing.State(containers={container}, config=config)
 

@@ -1,0 +1,54 @@
+name: Promote Charm
+permissions:
+  contents: read
+on:
+  workflow_dispatch:
+    inputs:
+      destination-channel:
+        description: The channel to promote to
+        required: true
+        default: latest/stable
+        type: choice
+        options:
+          - latest/stable
+          - latest/candidate
+          - latest/beta
+      origin-channel:
+        description: The channel to promote from
+        required: true
+        default: latest/beta
+        type: choice
+        options:
+          - latest/candidate
+          - latest/beta
+          - latest/edge
+
+jobs:
+  promote-charm:
+    name: Promote Charm
+    runs-on: ubuntu-latest
+    env:
+      CHARM_PATH: "charm"
+      CHARMHUB_DESTINATION_CHANNEL: ${{ inputs.destination-channel }}
+      CHARMHUB_ORIGIN_CHANNEL: ${{ inputs.origin-channel }}
+    steps:
+      - name: Validate inputs
+        run: |
+          echo "Charm Path: $CHARM_PATH"
+          echo "Destination Channel: $CHARMHUB_DESTINATION_CHANNEL"
+          echo "Origin Channel: $CHARMHUB_ORIGIN_CHANNEL"
+          if [ "$CHARMHUB_DESTINATION_CHANNEL" = "$CHARMHUB_ORIGIN_CHANNEL" ]; then
+            echo "Error: Destination and origin channels cannot be the same."
+            exit 1
+          fi
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      - name: Promote Charm
+        uses: canonical/charming-actions/promote-charm@1753e0803f70445132e92acd45c905aba6473225 # 2.7.0
+        with:
+          credentials: ${{ secrets.CHARMHUB_TOKEN }}
+          destination-channel: ${{ inputs.destination-channel }}
+          origin-channel: ${{ inputs.origin-channel }}
+          charm-path: ${{ inputs.charm-path }}
