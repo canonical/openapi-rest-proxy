@@ -28,13 +28,11 @@ jobs:
     name: Promote Charm
     runs-on: ubuntu-latest
     env:
-      CHARM_PATH: "charm"
       CHARMHUB_DESTINATION_CHANNEL: ${{ inputs.destination-channel }}
       CHARMHUB_ORIGIN_CHANNEL: ${{ inputs.origin-channel }}
     steps:
       - name: Validate inputs
         run: |
-          echo "Charm Path: $CHARM_PATH"
           echo "Destination Channel: $CHARMHUB_DESTINATION_CHANNEL"
           echo "Origin Channel: $CHARMHUB_ORIGIN_CHANNEL"
           if [ "$CHARMHUB_DESTINATION_CHANNEL" = "$CHARMHUB_ORIGIN_CHANNEL" ]; then
@@ -51,4 +49,3 @@ jobs:
           credentials: ${{ secrets.CHARMHUB_TOKEN }}
           destination-channel: ${{ inputs.destination-channel }}
           origin-channel: ${{ inputs.origin-channel }}
-          charm-path: ${{ inputs.charm-path }}
