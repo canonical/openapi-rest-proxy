@@ -319,10 +319,12 @@ class _NginxRouteProvider(ops.framework.Object):
         super().__init__(charm, nginx_route_relation_name)
         self._charm = charm
         self._charm.framework.observe(
-            self._charm.on[nginx_route_relation_name].relation_changed, self._on_relation_changed
+            self._charm.on[nginx_route_relation_name].relation_changed,
+            self._on_relation_changed,
         )
         self._charm.framework.observe(
-            self._charm.on[nginx_route_relation_name].relation_broken, self._on_relation_broken
+            self._charm.on[nginx_route_relation_name].relation_broken,
+            self._on_relation_broken,
         )
 
     def _on_relation_changed(self, event: ops.charm.RelationChangedEvent) -> None:

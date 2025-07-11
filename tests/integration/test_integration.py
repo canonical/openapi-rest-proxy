@@ -1,17 +1,17 @@
 import os
+
 import pytest
 import respx
 from fastapi.testclient import TestClient
-from unittest.mock import patch, AsyncMock
-from httpx import Request, Response
+from httpx import Response
 
 os.environ["OPENAPI_SCHEMA_URL"] = "http://localhost:8001/example-openapi.yml"
 os.environ["ORIGIN_BASE_URL"] = "http://localhost:8001"
 os.environ["ENDPOINT_ALLOW_LIST"] = "GET:/pets"
 os.environ["FIXED_REQUEST_HEADERS"] = "X-Test-Header:TestValue"
 
+
 from proxy.app import app
-from httpx import AsyncClient
 
 # Note! You need to have the schema server running at https://localhost:8001
 # Easiest achieved with `docker-compose up schema -d` at the root of the project.

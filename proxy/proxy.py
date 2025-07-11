@@ -1,10 +1,13 @@
 import logging
-from httpx import Request, AsyncClient
-from fastapi.routing import APIRouter
+
 from fastapi import Request, Response
+from fastapi.routing import APIRouter
+from httpx import AsyncClient
 
 
 def create_proxy_handler(method: str, path: str, origin_base_url: str):
+    """Create a proxy handler for a specific HTTP method and path."""
+
     async def proxy_handler(request: Request):
         return await proxy(
             request, method=method, path=path, origin_base_url=origin_base_url
@@ -14,6 +17,7 @@ def create_proxy_handler(method: str, path: str, origin_base_url: str):
 
 
 def filter_endpoints(schema: dict, allow_list: list):
+    """Filter OpenAPI schema to only include allowed endpoints."""
     logging.debug("Filtering endpoints...")
     logging.debug(f"Allow list: {allow_list}")
     filtered_paths = {}
@@ -40,6 +44,7 @@ def filter_endpoints(schema: dict, allow_list: list):
 
 
 def create_proxy_routes(router: APIRouter, schema: dict, origin_base_url: str):
+    """Create proxy routes from OpenAPI schema."""
     logging.debug("Creating proxy routes...")
 
     for path, methods in schema.get("paths", {}).items():
@@ -57,9 +62,14 @@ def create_proxy_routes(router: APIRouter, schema: dict, origin_base_url: str):
 
 
 async def proxy(request: Request, method: str, path: str, origin_base_url: str):
+    """Proxy HTTP request to origin server with path parameter substitution."""
     logging.info(f"Proxying {method.upper()} {path}")
 
-    url = f"{origin_base_url}{path}"
+    actual_path = path
+    for param_name, param_value in request.path_params.items():
+        actual_path = actual_path.replace(f"{{{param_name}}}", param_value)
+
+    url = f"{origin_base_url}{actual_path}"
     params = dict(request.query_params)
 
     headers = {
