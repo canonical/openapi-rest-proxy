@@ -1,10 +1,13 @@
-from fastapi import FastAPI, Request, Response
-import httpx
-import yaml
+import base64
 import logging
 import os
 import time
-import base64
+
+import httpx
+import yaml
+from fastapi import FastAPI, Request
+
+from .proxy import create_proxy_routes, filter_endpoints
 
 app = FastAPI()
 
@@ -16,6 +19,7 @@ logging.basicConfig(level=log_level)
 
 
 def load_openapi_schema(url: str):
+    """Load OpenAPI schema from URL."""
     logging.debug(f"Loading OpenAPI schema from {url}")
     response = httpx.get(url)
     response.raise_for_status()
@@ -38,6 +42,7 @@ token_info = {"access_token": None, "expires_at": 0, "refresh_token": None}
 
 
 def get_access_token():
+    """Get OAuth2 access token for authentication."""
     if not auth_endpoint_url or not client_id or not client_secret:
         return None
 
@@ -92,9 +97,7 @@ openapi_schema = load_openapi_schema(openapi_schema_url)
 # Example: ALLOW_LIST="GET:/pets|GET:/pets/{petId}"
 allow_list = os.getenv("ENDPOINT_ALLOW_LIST", "").split("|")
 
-from .proxy import create_proxy_routes, filter_endpoints
-
-if allow_list != ['']:
+if allow_list != [""]:
     logging.info(f"Filtering API to allow list: {allow_list}")
     openapi_schema = filter_endpoints(openapi_schema, allow_list)
 else:
@@ -112,6 +115,7 @@ else:
 
 @app.middleware("http")
 async def mutate_headers(request: Request, call_next):
+    """Add fixed headers and authorization to requests."""
     mutable_headers = list(request.scope["headers"])
 
     for header, value in fixed_headers.items():
@@ -132,6 +136,7 @@ async def mutate_headers(request: Request, call_next):
 
 @app.get("/")
 def read_root():
+    """Return proxy configuration information."""
     return {"origin": origin_base_url, "schema": openapi_schema_url}
 
 
