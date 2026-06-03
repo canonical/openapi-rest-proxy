@@ -8,6 +8,9 @@ dependencies = [
     "fastapi>=0.115.6",
     "httpx>=0.28.1",
     "pyyaml>=6.0.2",
+    # Pinned to address CVE-2026-48710 (BadHost): FastAPI does not constrain
+    # starlette to a fixed version, so the safe version must be pinned directly.
+    "starlette>=1.0.1",
     "uvicorn>=0.34.0",
 ]
 
